@@ -11,7 +11,8 @@
     "db:rollback": "knex migrate:rollback --knexfile src/db/knexfile.ts",
     "db:seed": "knex seed:run --knexfile src/db/knexfile.ts",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "eval:emails": "cd .. && npx promptfoo eval -c evals/promptfooconfig.yaml --env-path backend/.env"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

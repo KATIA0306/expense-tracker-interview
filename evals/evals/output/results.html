@@ -1,0 +1,410 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Email CSV → LLM receipt detection & expense extraction (for DB upload)</title>
+    <style>
+      body {
+        font-family:
+          -apple-system,
+          BlinkMacSystemFont,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        text-align: left;
+        word-break: break-all;
+      }
+      th,
+      td {
+        padding: 5px;
+        min-width: 200px;
+        white-space: pre-wrap;
+        vertical-align: top;
+      }
+
+      tr > td[data-content^='[PASS]'] {
+        color: green;
+      }
+      tr > td[data-content^='[FAIL]'] {
+        color: #ad0000;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        
+        <th>emailSummaries</th>
+        
+        <th>emails</th>
+        
+        <th>expectedMinExpenses</th>
+        
+        <th>expectedNotReceiptIds</th>
+        
+        <th>expectedReceiptIds</th>
+        
+        <th>[Gemini 2.0 Flash] Email receipt filter: prompts/email-filter.txt: Analyze the following emails and identify which ones contain receipts,
+transaction confirmations, purchase confirmations, or expense-related information.
+
+Emails:
+{{emailSummaries}}
+
+Return the IDs of emails that contain receipt or transaction information.
+Only include emails that represent actual purchases or expenses.
+Do NOT include newsletters, promotional emails, or general communications.
+
+You must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.
+Format: {&quot;receiptEmailIds&quot;: [&quot;id1&quot;, &quot;id2&quot;]}</th>
+        
+        <th>[Gemini 2.0 Flash] Expense extraction: prompts/expense-extract.txt: Analyze the following emails and extract expense/receipt information from each.
+For each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),
+category (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.
+
+Emails:
+{{emails}}
+
+Extract expense details from each email. If an email contains multiple transactions,
+create separate entries for each.
+
+You must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.
+Format: {&quot;expenses&quot;: [{&quot;emailId&quot;: &quot;string&quot;, &quot;merchant&quot;: &quot;string&quot;, &quot;amount&quot;: number, &quot;date&quot;: &quot;YYYY-MM-DD&quot;, &quot;category&quot;: &quot;Food|Transport|Entertainment|Bills|Shopping|Other&quot;, &quot;description&quot;: &quot;string&quot;}]}</th>
+        
+      </thead>
+      <tbody>
+        
+        <tr>
+          
+          <td data-content="[
+  {&quot;id&quot;:&quot;rec-001&quot;,&quot;from&quot;:&quot;orders@amazon.com&quot;,&quot;subject&quot;:&quot;Your Amazon.com order of &#92;&quot;Coffee&#92;&quot; has shipped&quot;,&quot;bodyPreview&quot;:&quot;Order total: $24.99. Order date: January 15, 2025. Thank you for your purchase.&quot;}
+]
+">[
+  {&quot;id&quot;:&quot;rec-001&quot;,&quot;from&quot;:&quot;orders@amazon.com&quot;,&quot;subject&quot;:&quot;Your Amazon.com order of &#92;&quot;Coffee&#92;&quot; has shipped&quot;,&quot;bodyPreview&quot;:&quot;Order total: $24.99. Order date: January 15, 2025. Thank you for your purchase.&quot;}
+]
+</td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[
+  &quot;rec-001&quot;
+]">[
+  &quot;rec-001&quot;
+]</td>
+          
+          <td data-content="[PASS] (1.00, filter_accuracy: 1.00)
+
+```json
+{&quot;receiptEmailIds&quot;: [&quot;rec-001&quot;]}
+```
+
+Pass Reason: All assertions passed">[PASS] (1.00, filter_accuracy: 1.00)
+
+```json
+{&quot;receiptEmailIds&quot;: [&quot;rec-001&quot;]}
+```
+
+Pass Reason: All assertions passed</td>
+          
+        </tr>
+        
+        <tr>
+          
+          <td data-content="[
+  {&quot;id&quot;:&quot;news-001&quot;,&quot;from&quot;:&quot;newsletter@retailer.com&quot;,&quot;subject&quot;:&quot;Weekly deals inside!&quot;,&quot;bodyPreview&quot;:&quot;Check out this week&#39;s tips and promotions. No purchase required. Click here to browse.&quot;}
+]
+">[
+  {&quot;id&quot;:&quot;news-001&quot;,&quot;from&quot;:&quot;newsletter@retailer.com&quot;,&quot;subject&quot;:&quot;Weekly deals inside!&quot;,&quot;bodyPreview&quot;:&quot;Check out this week&#39;s tips and promotions. No purchase required. Click here to browse.&quot;}
+]
+</td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[
+  &quot;news-001&quot;
+]">[
+  &quot;news-001&quot;
+]</td>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[PASS] (1.00, filter_accuracy: 1.00)
+
+{&quot;receiptEmailIds&quot;: []}
+
+
+Pass Reason: All assertions passed">[PASS] (1.00, filter_accuracy: 1.00)
+
+{&quot;receiptEmailIds&quot;: []}
+
+
+Pass Reason: All assertions passed</td>
+          
+        </tr>
+        
+        <tr>
+          
+          <td data-content="[
+  {&quot;id&quot;:&quot;rec-002&quot;,&quot;from&quot;:&quot;receipts@uber.com&quot;,&quot;subject&quot;:&quot;Your trip receipt&quot;,&quot;bodyPreview&quot;:&quot;Trip total $18.50. Payment completed. Thank you for riding with Uber.&quot;},
+  {&quot;id&quot;:&quot;news-002&quot;,&quot;from&quot;:&quot;marketing@store.com&quot;,&quot;subject&quot;:&quot;Spring sale preview&quot;,&quot;bodyPreview&quot;:&quot;Get early access to our spring sale. No purchase necessary.&quot;}
+]
+">[
+  {&quot;id&quot;:&quot;rec-002&quot;,&quot;from&quot;:&quot;receipts@uber.com&quot;,&quot;subject&quot;:&quot;Your trip receipt&quot;,&quot;bodyPreview&quot;:&quot;Trip total $18.50. Payment completed. Thank you for riding with Uber.&quot;},
+  {&quot;id&quot;:&quot;news-002&quot;,&quot;from&quot;:&quot;marketing@store.com&quot;,&quot;subject&quot;:&quot;Spring sale preview&quot;,&quot;bodyPreview&quot;:&quot;Get early access to our spring sale. No purchase necessary.&quot;}
+]
+</td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[
+  &quot;news-002&quot;
+]">[
+  &quot;news-002&quot;
+]</td>
+          
+          <td data-content="[
+  &quot;rec-002&quot;
+]">[
+  &quot;rec-002&quot;
+]</td>
+          
+          <td data-content="[PASS] (1.00, filter_accuracy: 1.00)
+
+```json
+{&quot;receiptEmailIds&quot;: [&quot;rec-002&quot;]}
+```
+
+Pass Reason: All assertions passed">[PASS] (1.00, filter_accuracy: 1.00)
+
+```json
+{&quot;receiptEmailIds&quot;: [&quot;rec-002&quot;]}
+```
+
+Pass Reason: All assertions passed</td>
+          
+        </tr>
+        
+        <tr>
+          
+          <td data-content="[
+  {&quot;id&quot;:&quot;evt-001&quot;,&quot;from&quot;:&quot;events@meetup.com&quot;,&quot;subject&quot;:&quot;Reminder: Meetup tomorrow&quot;,&quot;bodyPreview&quot;:&quot;Your event is scheduled for tomorrow at 6pm. See you there!&quot;}
+]
+">[
+  {&quot;id&quot;:&quot;evt-001&quot;,&quot;from&quot;:&quot;events@meetup.com&quot;,&quot;subject&quot;:&quot;Reminder: Meetup tomorrow&quot;,&quot;bodyPreview&quot;:&quot;Your event is scheduled for tomorrow at 6pm. See you there!&quot;}
+]
+</td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[
+  &quot;evt-001&quot;
+]">[
+  &quot;evt-001&quot;
+]</td>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[PASS] (1.00, filter_accuracy: 1.00)
+
+```json
+{&quot;receiptEmailIds&quot;: []}
+```
+
+Pass Reason: All assertions passed">[PASS] (1.00, filter_accuracy: 1.00)
+
+```json
+{&quot;receiptEmailIds&quot;: []}
+```
+
+Pass Reason: All assertions passed</td>
+          
+        </tr>
+        
+        <tr>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[
+  {&quot;id&quot;:&quot;ex-1&quot;,&quot;from&quot;:&quot;orders@coffee-shop.com&quot;,&quot;subject&quot;:&quot;Your receipt #4421&quot;,&quot;date&quot;:&quot;Wed, 22 Jan 2025 10:30:00 -0500&quot;,&quot;body&quot;:&quot;Thank you for your order. Total: $12.75. Date: January 22, 2025. Card ending 4242.&quot;}
+]
+">[
+  {&quot;id&quot;:&quot;ex-1&quot;,&quot;from&quot;:&quot;orders@coffee-shop.com&quot;,&quot;subject&quot;:&quot;Your receipt #4421&quot;,&quot;date&quot;:&quot;Wed, 22 Jan 2025 10:30:00 -0500&quot;,&quot;body&quot;:&quot;Thank you for your order. Total: $12.75. Date: January 22, 2025. Card ending 4242.&quot;}
+]
+</td>
+          
+          <td data-content="1">1</td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[PASS] (1.00, extract_accuracy: 1.00)
+
+```json
+{&quot;expenses&quot;: [{&quot;emailId&quot;: &quot;ex-1&quot;, &quot;merchant&quot;: &quot;coffee-shop.com&quot;, &quot;amount&quot;: 12.75, &quot;date&quot;: &quot;2025-01-22&quot;, &quot;category&quot;: &quot;Food&quot;, &quot;description&quot;: &quot;Coffee shop order&quot;}]}
+```
+
+Pass Reason: All assertions passed">[PASS] (1.00, extract_accuracy: 1.00)
+
+```json
+{&quot;expenses&quot;: [{&quot;emailId&quot;: &quot;ex-1&quot;, &quot;merchant&quot;: &quot;coffee-shop.com&quot;, &quot;amount&quot;: 12.75, &quot;date&quot;: &quot;2025-01-22&quot;, &quot;category&quot;: &quot;Food&quot;, &quot;description&quot;: &quot;Coffee shop order&quot;}]}
+```
+
+Pass Reason: All assertions passed</td>
+          
+        </tr>
+        
+        <tr>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[
+  {&quot;id&quot;:&quot;ex-2&quot;,&quot;from&quot;:&quot;noreply@instacart.com&quot;,&quot;subject&quot;:&quot;Your No Frills order confirmation&quot;,&quot;date&quot;:&quot;Fri, 30 Jan 2026 14:55:58 +0000&quot;,&quot;body&quot;:&quot;Your order is confirmed. Delivery today 1pm-4pm. Order total: $87.42. Items: milk, bread, eggs. Service fee may apply.&quot;}
+]
+">[
+  {&quot;id&quot;:&quot;ex-2&quot;,&quot;from&quot;:&quot;noreply@instacart.com&quot;,&quot;subject&quot;:&quot;Your No Frills order confirmation&quot;,&quot;date&quot;:&quot;Fri, 30 Jan 2026 14:55:58 +0000&quot;,&quot;body&quot;:&quot;Your order is confirmed. Delivery today 1pm-4pm. Order total: $87.42. Items: milk, bread, eggs. Service fee may apply.&quot;}
+]
+</td>
+          
+          <td data-content="1">1</td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[PASS] (1.00, extract_accuracy: 1.00)
+
+```json
+{&quot;expenses&quot;: [{&quot;emailId&quot;: &quot;ex-2&quot;, &quot;merchant&quot;: &quot;No Frills&quot;, &quot;amount&quot;: 87.42, &quot;date&quot;: &quot;2026-01-30&quot;, &quot;category&quot;: &quot;Food&quot;, &quot;description&quot;: &quot;Instacart order: milk, bread, eggs&quot;}]}
+```
+
+Pass Reason: All assertions passed">[PASS] (1.00, extract_accuracy: 1.00)
+
+```json
+{&quot;expenses&quot;: [{&quot;emailId&quot;: &quot;ex-2&quot;, &quot;merchant&quot;: &quot;No Frills&quot;, &quot;amount&quot;: 87.42, &quot;date&quot;: &quot;2026-01-30&quot;, &quot;category&quot;: &quot;Food&quot;, &quot;description&quot;: &quot;Instacart order: milk, bread, eggs&quot;}]}
+```
+
+Pass Reason: All assertions passed</td>
+          
+        </tr>
+        
+        <tr>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[
+  {&quot;id&quot;:&quot;ex-3&quot;,&quot;from&quot;:&quot;receipts@lyft.com&quot;,&quot;subject&quot;:&quot;Your Lyft receipt&quot;,&quot;date&quot;:&quot;Mon, 03 Feb 2025 08:15:00 GMT&quot;,&quot;body&quot;:&quot;Trip from A to B. Total charged: $22.30. Thank you for riding.&quot;}
+]
+">[
+  {&quot;id&quot;:&quot;ex-3&quot;,&quot;from&quot;:&quot;receipts@lyft.com&quot;,&quot;subject&quot;:&quot;Your Lyft receipt&quot;,&quot;date&quot;:&quot;Mon, 03 Feb 2025 08:15:00 GMT&quot;,&quot;body&quot;:&quot;Trip from A to B. Total charged: $22.30. Thank you for riding.&quot;}
+]
+</td>
+          
+          <td data-content="1">1</td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[PASS] (1.00, extract_accuracy: 1.00)
+
+    ```json
+{
+&quot;expenses&quot;: [
+  {
+    &quot;emailId&quot;: &quot;ex-3&quot;,
+    &quot;merchant&quot;: &quot;Lyft&quot;,
+    &quot;amount&quot;: 22.30,
+    &quot;date&quot;: &quot;2025-02-03&quot;,
+    &quot;category&quot;: &quot;Transport&quot;,
+    &quot;description&quot;: &quot;Trip from A to B&quot;
+  }
+]
+}
+```
+
+    Pass Reason: All assertions passed">[PASS] (1.00, extract_accuracy: 1.00)
+
+    ```json
+{
+&quot;expenses&quot;: [
+  {
+    &quot;emailId&quot;: &quot;ex-3&quot;,
+    &quot;merchant&quot;: &quot;Lyft&quot;,
+    &quot;amount&quot;: 22.30,
+    &quot;date&quot;: &quot;2025-02-03&quot;,
+    &quot;category&quot;: &quot;Transport&quot;,
+    &quot;description&quot;: &quot;Trip from A to B&quot;
+  }
+]
+}
+```
+
+    Pass Reason: All assertions passed</td>
+          
+        </tr>
+        
+        <tr>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[
+  {&quot;id&quot;:&quot;ex-4&quot;,&quot;from&quot;:&quot;support@bank.com&quot;,&quot;subject&quot;:&quot;Your statement is ready&quot;,&quot;date&quot;:&quot;01 Feb 2025&quot;,&quot;body&quot;:&quot;Your monthly statement is available to view. Log in to see details. This is not a receipt.&quot;}
+]
+">[
+  {&quot;id&quot;:&quot;ex-4&quot;,&quot;from&quot;:&quot;support@bank.com&quot;,&quot;subject&quot;:&quot;Your statement is ready&quot;,&quot;date&quot;:&quot;01 Feb 2025&quot;,&quot;body&quot;:&quot;Your monthly statement is available to view. Log in to see details. This is not a receipt.&quot;}
+]
+</td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content=""></td>
+          
+          <td data-content="[PASS] (1.00, extract_accuracy: 1.00)
+
+```json
+{&quot;expenses&quot;: []}
+```
+
+Pass Reason: All assertions passed">[PASS] (1.00, extract_accuracy: 1.00)
+
+```json
+{&quot;expenses&quot;: []}
+```
+
+Pass Reason: All assertions passed</td>
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </body>
+</html>

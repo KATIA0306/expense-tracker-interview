@@ -1,0 +1,1223 @@
+{
+  "evalId": "eval-cgy-2026-02-24T19:17:36",
+  "results": {
+    "version": 3,
+    "timestamp": "2026-02-24T19:17:36.534Z",
+    "prompts": [
+      {
+        "raw": "Analyze the following emails and identify which ones contain receipts,\ntransaction confirmations, purchase confirmations, or expense-related information.\n\nEmails:\n{{emailSummaries}}\n\nReturn the IDs of emails that contain receipt or transaction information.\nOnly include emails that represent actual purchases or expenses.\nDo NOT include newsletters, promotional emails, or general communications.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"receiptEmailIds\": [\"id1\", \"id2\"]}",
+        "label": "Email receipt filter: prompts/email-filter.txt: Analyze the following emails and identify which ones contain receipts,\ntransaction confirmations, purchase confirmations, or expense-related information.\n\nEmails:\n{{emailSummaries}}\n\nReturn the IDs of emails that contain receipt or transaction information.\nOnly include emails that represent actual purchases or expenses.\nDo NOT include newsletters, promotional emails, or general communications.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"receiptEmailIds\": [\"id1\", \"id2\"]}",
+        "id": "1763f6d6fe4773fdea41771e7abbf3073f3ca785a83d2915e0e7adcba1925d47",
+        "provider": "Gemini 2.0 Flash",
+        "metrics": {
+          "score": 4,
+          "testPassCount": 4,
+          "testFailCount": 0,
+          "testErrorCount": 0,
+          "assertPassCount": 4,
+          "assertFailCount": 0,
+          "totalLatencyMs": 2284,
+          "tokenUsage": {
+            "prompt": 677,
+            "completion": 54,
+            "cached": 0,
+            "total": 731,
+            "numRequests": 4,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0
+              }
+            }
+          },
+          "namedScores": {
+            "filter_accuracy": 4
+          },
+          "namedScoresCount": {
+            "filter_accuracy": 4
+          },
+          "cost": 0.0000893
+        }
+      },
+      {
+        "raw": "Analyze the following emails and extract expense/receipt information from each.\nFor each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),\ncategory (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.\n\nEmails:\n{{emails}}\n\nExtract expense details from each email. If an email contains multiple transactions,\ncreate separate entries for each.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"expenses\": [{\"emailId\": \"string\", \"merchant\": \"string\", \"amount\": number, \"date\": \"YYYY-MM-DD\", \"category\": \"Food|Transport|Entertainment|Bills|Shopping|Other\", \"description\": \"string\"}]}",
+        "label": "Expense extraction: prompts/expense-extract.txt: Analyze the following emails and extract expense/receipt information from each.\nFor each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),\ncategory (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.\n\nEmails:\n{{emails}}\n\nExtract expense details from each email. If an email contains multiple transactions,\ncreate separate entries for each.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"expenses\": [{\"emailId\": \"string\", \"merchant\": \"string\", \"amount\": number, \"date\": \"YYYY-MM-DD\", \"category\": \"Food|Transport|Entertainment|Bills|Shopping|Other\", \"description\": \"string\"}]}",
+        "id": "0008d84b720daef4749277bfc7437ccd25aec12f376ba27a0f118191b9916c77",
+        "provider": "Gemini 2.0 Flash",
+        "metrics": {
+          "score": 4,
+          "testPassCount": 4,
+          "testFailCount": 0,
+          "testErrorCount": 0,
+          "assertPassCount": 8,
+          "assertFailCount": 0,
+          "totalLatencyMs": 3112,
+          "tokenUsage": {
+            "prompt": 979,
+            "completion": 240,
+            "cached": 0,
+            "total": 1219,
+            "numRequests": 4,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0
+              }
+            }
+          },
+          "namedScores": {
+            "extract_accuracy": 4
+          },
+          "namedScoresCount": {
+            "extract_accuracy": 4
+          },
+          "cost": 0.0001939
+        }
+      }
+    ],
+    "results": [
+      {
+        "cost": 0.000024100000000000003,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "filter_accuracy": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Filter output is valid"
+            }
+          ]
+        },
+        "id": "64427ddf-d08b-4d00-a389-da25d0c01a9c",
+        "latencyMs": 644,
+        "namedScores": {
+          "filter_accuracy": 1
+        },
+        "prompt": {
+          "raw": "Analyze the following emails and identify which ones contain receipts,\ntransaction confirmations, purchase confirmations, or expense-related information.\n\nEmails:\n[\n  {\"id\":\"rec-001\",\"from\":\"orders@amazon.com\",\"subject\":\"Your Amazon.com order of \\\"Coffee\\\" has shipped\",\"bodyPreview\":\"Order total: $24.99. Order date: January 15, 2025. Thank you for your purchase.\"}\n]\n\nReturn the IDs of emails that contain receipt or transaction information.\nOnly include emails that represent actual purchases or expenses.\nDo NOT include newsletters, promotional emails, or general communications.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"receiptEmailIds\": [\"id1\", \"id2\"]}",
+          "label": "Email receipt filter: prompts/email-filter.txt: Analyze the following emails and identify which ones contain receipts,\ntransaction confirmations, purchase confirmations, or expense-related information.\n\nEmails:\n{{emailSummaries}}\n\nReturn the IDs of emails that contain receipt or transaction information.\nOnly include emails that represent actual purchases or expenses.\nDo NOT include newsletters, promotional emails, or general communications.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"receiptEmailIds\": [\"id1\", \"id2\"]}",
+          "config": {
+            "disableVarExpansion": true
+          }
+        },
+        "promptId": "1763f6d6fe4773fdea41771e7abbf3073f3ca785a83d2915e0e7adcba1925d47",
+        "promptIdx": 0,
+        "provider": {
+          "id": "google:gemini-2.0-flash",
+          "label": "Gemini 2.0 Flash"
+        },
+        "response": {
+          "output": "```json\n{\"receiptEmailIds\": [\"rec-001\"]}\n```",
+          "tokenUsage": {
+            "prompt": 173,
+            "completion": 17,
+            "total": 190,
+            "numRequests": 1
+          },
+          "cost": 0.000024100000000000003,
+          "raw": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "```json\n{\"receiptEmailIds\": [\"rec-001\"]}\n```"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "avgLogprobs": -0.000045710503507186385
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 173,
+              "candidatesTokenCount": 17,
+              "totalTokenCount": 190,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 173
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 17
+                }
+              ]
+            },
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "UPmdaZPpLrTTjrEPv8T9qAg"
+          },
+          "cached": false,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "Filter - single clear receipt email is identified",
+          "prompts": [
+            "Email receipt filter"
+          ],
+          "vars": {
+            "emailSummaries": "[\n  {\"id\":\"rec-001\",\"from\":\"orders@amazon.com\",\"subject\":\"Your Amazon.com order of \\\"Coffee\\\" has shipped\",\"bodyPreview\":\"Order total: $24.99. Order date: January 15, 2025. Thank you for your purchase.\"}\n]\n",
+            "expectedReceiptIds": [
+              "rec-001"
+            ]
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://assertions/filter-assertions.js",
+              "metric": "filter_accuracy"
+            }
+          ],
+          "options": {
+            "disableVarExpansion": true
+          },
+          "metadata": {}
+        },
+        "testIdx": 0,
+        "vars": {
+          "emailSummaries": "[\n  {\"id\":\"rec-001\",\"from\":\"orders@amazon.com\",\"subject\":\"Your Amazon.com order of \\\"Coffee\\\" has shipped\",\"bodyPreview\":\"Order total: $24.99. Order date: January 15, 2025. Thank you for your purchase.\"}\n]\n",
+          "expectedReceiptIds": [
+            "rec-001"
+          ]
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0.0000188,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "filter_accuracy": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Filter output is valid"
+            }
+          ]
+        },
+        "id": "0d7d1bea-6d6d-4fe3-a148-cbd9fbebd5c0",
+        "latencyMs": 579,
+        "namedScores": {
+          "filter_accuracy": 1
+        },
+        "prompt": {
+          "raw": "Analyze the following emails and identify which ones contain receipts,\ntransaction confirmations, purchase confirmations, or expense-related information.\n\nEmails:\n[\n  {\"id\":\"news-001\",\"from\":\"newsletter@retailer.com\",\"subject\":\"Weekly deals inside!\",\"bodyPreview\":\"Check out this week's tips and promotions. No purchase required. Click here to browse.\"}\n]\n\nReturn the IDs of emails that contain receipt or transaction information.\nOnly include emails that represent actual purchases or expenses.\nDo NOT include newsletters, promotional emails, or general communications.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"receiptEmailIds\": [\"id1\", \"id2\"]}",
+          "label": "Email receipt filter: prompts/email-filter.txt: Analyze the following emails and identify which ones contain receipts,\ntransaction confirmations, purchase confirmations, or expense-related information.\n\nEmails:\n{{emailSummaries}}\n\nReturn the IDs of emails that contain receipt or transaction information.\nOnly include emails that represent actual purchases or expenses.\nDo NOT include newsletters, promotional emails, or general communications.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"receiptEmailIds\": [\"id1\", \"id2\"]}",
+          "config": {
+            "disableVarExpansion": true
+          }
+        },
+        "promptId": "1763f6d6fe4773fdea41771e7abbf3073f3ca785a83d2915e0e7adcba1925d47",
+        "promptIdx": 0,
+        "provider": {
+          "id": "google:gemini-2.0-flash",
+          "label": "Gemini 2.0 Flash"
+        },
+        "response": {
+          "output": "{\"receiptEmailIds\": []}\n",
+          "tokenUsage": {
+            "prompt": 156,
+            "completion": 8,
+            "total": 164,
+            "numRequests": 1
+          },
+          "cost": 0.0000188,
+          "raw": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\"receiptEmailIds\": []}\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "avgLogprobs": -0.013165726326406002
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 156,
+              "candidatesTokenCount": 8,
+              "totalTokenCount": 164,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 156
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 8
+                }
+              ]
+            },
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "UPmdaZ6yLbnwjrEP7OnM4Qk"
+          },
+          "cached": false,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "Filter - newsletter is excluded from receipts",
+          "prompts": [
+            "Email receipt filter"
+          ],
+          "vars": {
+            "emailSummaries": "[\n  {\"id\":\"news-001\",\"from\":\"newsletter@retailer.com\",\"subject\":\"Weekly deals inside!\",\"bodyPreview\":\"Check out this week's tips and promotions. No purchase required. Click here to browse.\"}\n]\n",
+            "expectedNotReceiptIds": [
+              "news-001"
+            ]
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://assertions/filter-assertions.js",
+              "metric": "filter_accuracy"
+            }
+          ],
+          "options": {
+            "disableVarExpansion": true
+          },
+          "metadata": {}
+        },
+        "testIdx": 1,
+        "vars": {
+          "emailSummaries": "[\n  {\"id\":\"news-001\",\"from\":\"newsletter@retailer.com\",\"subject\":\"Weekly deals inside!\",\"bodyPreview\":\"Check out this week's tips and promotions. No purchase required. Click here to browse.\"}\n]\n",
+          "expectedNotReceiptIds": [
+            "news-001"
+          ]
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0.000026300000000000002,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "filter_accuracy": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Filter output is valid"
+            }
+          ]
+        },
+        "id": "40113c64-0666-409e-9f29-f4bc20b5c7f9",
+        "latencyMs": 527,
+        "namedScores": {
+          "filter_accuracy": 1
+        },
+        "prompt": {
+          "raw": "Analyze the following emails and identify which ones contain receipts,\ntransaction confirmations, purchase confirmations, or expense-related information.\n\nEmails:\n[\n  {\"id\":\"rec-002\",\"from\":\"receipts@uber.com\",\"subject\":\"Your trip receipt\",\"bodyPreview\":\"Trip total $18.50. Payment completed. Thank you for riding with Uber.\"},\n  {\"id\":\"news-002\",\"from\":\"marketing@store.com\",\"subject\":\"Spring sale preview\",\"bodyPreview\":\"Get early access to our spring sale. No purchase necessary.\"}\n]\n\nReturn the IDs of emails that contain receipt or transaction information.\nOnly include emails that represent actual purchases or expenses.\nDo NOT include newsletters, promotional emails, or general communications.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"receiptEmailIds\": [\"id1\", \"id2\"]}",
+          "label": "Email receipt filter: prompts/email-filter.txt: Analyze the following emails and identify which ones contain receipts,\ntransaction confirmations, purchase confirmations, or expense-related information.\n\nEmails:\n{{emailSummaries}}\n\nReturn the IDs of emails that contain receipt or transaction information.\nOnly include emails that represent actual purchases or expenses.\nDo NOT include newsletters, promotional emails, or general communications.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"receiptEmailIds\": [\"id1\", \"id2\"]}",
+          "config": {
+            "disableVarExpansion": true
+          }
+        },
+        "promptId": "1763f6d6fe4773fdea41771e7abbf3073f3ca785a83d2915e0e7adcba1925d47",
+        "promptIdx": 0,
+        "provider": {
+          "id": "google:gemini-2.0-flash",
+          "label": "Gemini 2.0 Flash"
+        },
+        "response": {
+          "output": "```json\n{\"receiptEmailIds\": [\"rec-002\"]}\n```",
+          "tokenUsage": {
+            "prompt": 195,
+            "completion": 17,
+            "total": 212,
+            "numRequests": 1
+          },
+          "cost": 0.000026300000000000002,
+          "raw": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "```json\n{\"receiptEmailIds\": [\"rec-002\"]}\n```"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "avgLogprobs": -0.00008275351651451167
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 195,
+              "candidatesTokenCount": 17,
+              "totalTokenCount": 212,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 195
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 17
+                }
+              ]
+            },
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "UfmdaauJELav-8YPs-y2iQQ"
+          },
+          "cached": false,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "Filter - mixed: one receipt, one newsletter",
+          "prompts": [
+            "Email receipt filter"
+          ],
+          "vars": {
+            "emailSummaries": "[\n  {\"id\":\"rec-002\",\"from\":\"receipts@uber.com\",\"subject\":\"Your trip receipt\",\"bodyPreview\":\"Trip total $18.50. Payment completed. Thank you for riding with Uber.\"},\n  {\"id\":\"news-002\",\"from\":\"marketing@store.com\",\"subject\":\"Spring sale preview\",\"bodyPreview\":\"Get early access to our spring sale. No purchase necessary.\"}\n]\n",
+            "expectedReceiptIds": [
+              "rec-002"
+            ],
+            "expectedNotReceiptIds": [
+              "news-002"
+            ]
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://assertions/filter-assertions.js",
+              "metric": "filter_accuracy"
+            }
+          ],
+          "options": {
+            "disableVarExpansion": true
+          },
+          "metadata": {}
+        },
+        "testIdx": 2,
+        "vars": {
+          "emailSummaries": "[\n  {\"id\":\"rec-002\",\"from\":\"receipts@uber.com\",\"subject\":\"Your trip receipt\",\"bodyPreview\":\"Trip total $18.50. Payment completed. Thank you for riding with Uber.\"},\n  {\"id\":\"news-002\",\"from\":\"marketing@store.com\",\"subject\":\"Spring sale preview\",\"bodyPreview\":\"Get early access to our spring sale. No purchase necessary.\"}\n]\n",
+          "expectedReceiptIds": [
+            "rec-002"
+          ],
+          "expectedNotReceiptIds": [
+            "news-002"
+          ]
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0.000020100000000000004,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "filter_accuracy": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Filter output is valid"
+            }
+          ]
+        },
+        "id": "30aed221-97b8-44be-8db2-9625373aad51",
+        "latencyMs": 534,
+        "namedScores": {
+          "filter_accuracy": 1
+        },
+        "prompt": {
+          "raw": "Analyze the following emails and identify which ones contain receipts,\ntransaction confirmations, purchase confirmations, or expense-related information.\n\nEmails:\n[\n  {\"id\":\"evt-001\",\"from\":\"events@meetup.com\",\"subject\":\"Reminder: Meetup tomorrow\",\"bodyPreview\":\"Your event is scheduled for tomorrow at 6pm. See you there!\"}\n]\n\nReturn the IDs of emails that contain receipt or transaction information.\nOnly include emails that represent actual purchases or expenses.\nDo NOT include newsletters, promotional emails, or general communications.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"receiptEmailIds\": [\"id1\", \"id2\"]}",
+          "label": "Email receipt filter: prompts/email-filter.txt: Analyze the following emails and identify which ones contain receipts,\ntransaction confirmations, purchase confirmations, or expense-related information.\n\nEmails:\n{{emailSummaries}}\n\nReturn the IDs of emails that contain receipt or transaction information.\nOnly include emails that represent actual purchases or expenses.\nDo NOT include newsletters, promotional emails, or general communications.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"receiptEmailIds\": [\"id1\", \"id2\"]}",
+          "config": {
+            "disableVarExpansion": true
+          }
+        },
+        "promptId": "1763f6d6fe4773fdea41771e7abbf3073f3ca785a83d2915e0e7adcba1925d47",
+        "promptIdx": 0,
+        "provider": {
+          "id": "google:gemini-2.0-flash",
+          "label": "Gemini 2.0 Flash"
+        },
+        "response": {
+          "output": "```json\n{\"receiptEmailIds\": []}\n```",
+          "tokenUsage": {
+            "prompt": 153,
+            "completion": 12,
+            "total": 165,
+            "numRequests": 1
+          },
+          "cost": 0.000020100000000000004,
+          "raw": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "```json\n{\"receiptEmailIds\": []}\n```"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "avgLogprobs": -0.007735261072715123
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 153,
+              "candidatesTokenCount": 12,
+              "totalTokenCount": 165,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 153
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 12
+                }
+              ]
+            },
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "UfmdaaarE4f4jrEPn4_SwAU"
+          },
+          "cached": false,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "Filter - empty list when no receipts",
+          "prompts": [
+            "Email receipt filter"
+          ],
+          "vars": {
+            "emailSummaries": "[\n  {\"id\":\"evt-001\",\"from\":\"events@meetup.com\",\"subject\":\"Reminder: Meetup tomorrow\",\"bodyPreview\":\"Your event is scheduled for tomorrow at 6pm. See you there!\"}\n]\n",
+            "expectedNotReceiptIds": [
+              "evt-001"
+            ]
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://assertions/filter-assertions.js",
+              "metric": "filter_accuracy"
+            }
+          ],
+          "options": {
+            "disableVarExpansion": true
+          },
+          "metadata": {}
+        },
+        "testIdx": 3,
+        "vars": {
+          "emailSummaries": "[\n  {\"id\":\"evt-001\",\"from\":\"events@meetup.com\",\"subject\":\"Reminder: Meetup tomorrow\",\"bodyPreview\":\"Your event is scheduled for tomorrow at 6pm. See you there!\"}\n]\n",
+          "expectedNotReceiptIds": [
+            "evt-001"
+          ]
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0.0000528,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "extract_accuracy": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Extract output is valid"
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Amount/date valid: 1/1 (100%)"
+            }
+          ]
+        },
+        "id": "ace2a0ce-5ede-4e9b-86af-b85241117d3f",
+        "latencyMs": 801,
+        "namedScores": {
+          "extract_accuracy": 1
+        },
+        "prompt": {
+          "raw": "Analyze the following emails and extract expense/receipt information from each.\nFor each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),\ncategory (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.\n\nEmails:\n[\n  {\"id\":\"ex-1\",\"from\":\"orders@coffee-shop.com\",\"subject\":\"Your receipt #4421\",\"date\":\"Wed, 22 Jan 2025 10:30:00 -0500\",\"body\":\"Thank you for your order. Total: $12.75. Date: January 22, 2025. Card ending 4242.\"}\n]\n\nExtract expense details from each email. If an email contains multiple transactions,\ncreate separate entries for each.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"expenses\": [{\"emailId\": \"string\", \"merchant\": \"string\", \"amount\": number, \"date\": \"YYYY-MM-DD\", \"category\": \"Food|Transport|Entertainment|Bills|Shopping|Other\", \"description\": \"string\"}]}",
+          "label": "Expense extraction: prompts/expense-extract.txt: Analyze the following emails and extract expense/receipt information from each.\nFor each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),\ncategory (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.\n\nEmails:\n{{emails}}\n\nExtract expense details from each email. If an email contains multiple transactions,\ncreate separate entries for each.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"expenses\": [{\"emailId\": \"string\", \"merchant\": \"string\", \"amount\": number, \"date\": \"YYYY-MM-DD\", \"category\": \"Food|Transport|Entertainment|Bills|Shopping|Other\", \"description\": \"string\"}]}",
+          "config": {
+            "disableVarExpansion": true
+          }
+        },
+        "promptId": "0008d84b720daef4749277bfc7437ccd25aec12f376ba27a0f118191b9916c77",
+        "promptIdx": 1,
+        "provider": {
+          "id": "google:gemini-2.0-flash",
+          "label": "Gemini 2.0 Flash"
+        },
+        "response": {
+          "output": "```json\n{\"expenses\": [{\"emailId\": \"ex-1\", \"merchant\": \"coffee-shop.com\", \"amount\": 12.75, \"date\": \"2025-01-22\", \"category\": \"Food\", \"description\": \"Coffee shop order\"}]}\n```",
+          "tokenUsage": {
+            "prompt": 260,
+            "completion": 67,
+            "total": 327,
+            "numRequests": 1
+          },
+          "cost": 0.0000528,
+          "raw": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "```json\n{\"expenses\": [{\"emailId\": \"ex-1\", \"merchant\": \"coffee-shop.com\", \"amount\": 12.75, \"date\": \"2025-01-22\", \"category\": \"Food\", \"description\": \"Coffee shop order\"}]}\n```"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "avgLogprobs": -0.01442727846885795
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 260,
+              "candidatesTokenCount": 67,
+              "totalTokenCount": 327,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 260
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 67
+                }
+              ]
+            },
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "UfmdadmEMLmu-8YP64COiQs"
+          },
+          "cached": false,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "Extract - single receipt with clear total and date",
+          "prompts": [
+            "Expense extraction"
+          ],
+          "vars": {
+            "emails": "[\n  {\"id\":\"ex-1\",\"from\":\"orders@coffee-shop.com\",\"subject\":\"Your receipt #4421\",\"date\":\"Wed, 22 Jan 2025 10:30:00 -0500\",\"body\":\"Thank you for your order. Total: $12.75. Date: January 22, 2025. Card ending 4242.\"}\n]\n",
+            "expectedMinExpenses": 1
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://assertions/extract-assertions.js",
+              "metric": "extract_accuracy"
+            },
+            {
+              "type": "javascript",
+              "value": "file://assertions/extract-amount-date-assertions.js",
+              "threshold": 0.95
+            }
+          ],
+          "options": {
+            "disableVarExpansion": true
+          },
+          "metadata": {}
+        },
+        "testIdx": 4,
+        "vars": {
+          "emails": "[\n  {\"id\":\"ex-1\",\"from\":\"orders@coffee-shop.com\",\"subject\":\"Your receipt #4421\",\"date\":\"Wed, 22 Jan 2025 10:30:00 -0500\",\"body\":\"Thank you for your order. Total: $12.75. Date: January 22, 2025. Card ending 4242.\"}\n]\n",
+          "expectedMinExpenses": 1
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0.00005440000000000001,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "extract_accuracy": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Extract output is valid"
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Amount/date valid: 1/1 (100%)"
+            }
+          ]
+        },
+        "id": "633b0360-67ec-4bec-82e3-bcf97e75d759",
+        "latencyMs": 864,
+        "namedScores": {
+          "extract_accuracy": 1
+        },
+        "prompt": {
+          "raw": "Analyze the following emails and extract expense/receipt information from each.\nFor each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),\ncategory (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.\n\nEmails:\n[\n  {\"id\":\"ex-2\",\"from\":\"noreply@instacart.com\",\"subject\":\"Your No Frills order confirmation\",\"date\":\"Fri, 30 Jan 2026 14:55:58 +0000\",\"body\":\"Your order is confirmed. Delivery today 1pm-4pm. Order total: $87.42. Items: milk, bread, eggs. Service fee may apply.\"}\n]\n\nExtract expense details from each email. If an email contains multiple transactions,\ncreate separate entries for each.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"expenses\": [{\"emailId\": \"string\", \"merchant\": \"string\", \"amount\": number, \"date\": \"YYYY-MM-DD\", \"category\": \"Food|Transport|Entertainment|Bills|Shopping|Other\", \"description\": \"string\"}]}",
+          "label": "Expense extraction: prompts/expense-extract.txt: Analyze the following emails and extract expense/receipt information from each.\nFor each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),\ncategory (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.\n\nEmails:\n{{emails}}\n\nExtract expense details from each email. If an email contains multiple transactions,\ncreate separate entries for each.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"expenses\": [{\"emailId\": \"string\", \"merchant\": \"string\", \"amount\": number, \"date\": \"YYYY-MM-DD\", \"category\": \"Food|Transport|Entertainment|Bills|Shopping|Other\", \"description\": \"string\"}]}",
+          "config": {
+            "disableVarExpansion": true
+          }
+        },
+        "promptId": "0008d84b720daef4749277bfc7437ccd25aec12f376ba27a0f118191b9916c77",
+        "promptIdx": 1,
+        "provider": {
+          "id": "google:gemini-2.0-flash",
+          "label": "Gemini 2.0 Flash"
+        },
+        "response": {
+          "output": "```json\n{\"expenses\": [{\"emailId\": \"ex-2\", \"merchant\": \"No Frills\", \"amount\": 87.42, \"date\": \"2026-01-30\", \"category\": \"Food\", \"description\": \"Instacart order: milk, bread, eggs\"}]}\n```",
+          "tokenUsage": {
+            "prompt": 260,
+            "completion": 71,
+            "total": 331,
+            "numRequests": 1
+          },
+          "cost": 0.00005440000000000001,
+          "raw": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "```json\n{\"expenses\": [{\"emailId\": \"ex-2\", \"merchant\": \"No Frills\", \"amount\": 87.42, \"date\": \"2026-01-30\", \"category\": \"Food\", \"description\": \"Instacart order: milk, bread, eggs\"}]}\n```"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "avgLogprobs": -0.05529985293536119
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 260,
+              "candidatesTokenCount": 71,
+              "totalTokenCount": 331,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 260
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 71
+                }
+              ]
+            },
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "UfmdadHrM7av-8YPt_zDuAU"
+          },
+          "cached": false,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "Extract - grocery receipt with multiple line items (single total)",
+          "prompts": [
+            "Expense extraction"
+          ],
+          "vars": {
+            "emails": "[\n  {\"id\":\"ex-2\",\"from\":\"noreply@instacart.com\",\"subject\":\"Your No Frills order confirmation\",\"date\":\"Fri, 30 Jan 2026 14:55:58 +0000\",\"body\":\"Your order is confirmed. Delivery today 1pm-4pm. Order total: $87.42. Items: milk, bread, eggs. Service fee may apply.\"}\n]\n",
+            "expectedMinExpenses": 1
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://assertions/extract-assertions.js",
+              "metric": "extract_accuracy"
+            },
+            {
+              "type": "javascript",
+              "value": "file://assertions/extract-amount-date-assertions.js",
+              "threshold": 0.95
+            }
+          ],
+          "options": {
+            "disableVarExpansion": true
+          },
+          "metadata": {}
+        },
+        "testIdx": 5,
+        "vars": {
+          "emails": "[\n  {\"id\":\"ex-2\",\"from\":\"noreply@instacart.com\",\"subject\":\"Your No Frills order confirmation\",\"date\":\"Fri, 30 Jan 2026 14:55:58 +0000\",\"body\":\"Your order is confirmed. Delivery today 1pm-4pm. Order total: $87.42. Items: milk, bread, eggs. Service fee may apply.\"}\n]\n",
+          "expectedMinExpenses": 1
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0.00006050000000000001,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "extract_accuracy": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Extract output is valid"
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Amount/date valid: 1/1 (100%)"
+            }
+          ]
+        },
+        "id": "14582d77-7557-4c45-b4a6-1554406f8284",
+        "latencyMs": 975,
+        "namedScores": {
+          "extract_accuracy": 1
+        },
+        "prompt": {
+          "raw": "Analyze the following emails and extract expense/receipt information from each.\nFor each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),\ncategory (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.\n\nEmails:\n[\n  {\"id\":\"ex-3\",\"from\":\"receipts@lyft.com\",\"subject\":\"Your Lyft receipt\",\"date\":\"Mon, 03 Feb 2025 08:15:00 GMT\",\"body\":\"Trip from A to B. Total charged: $22.30. Thank you for riding.\"}\n]\n\nExtract expense details from each email. If an email contains multiple transactions,\ncreate separate entries for each.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"expenses\": [{\"emailId\": \"string\", \"merchant\": \"string\", \"amount\": number, \"date\": \"YYYY-MM-DD\", \"category\": \"Food|Transport|Entertainment|Bills|Shopping|Other\", \"description\": \"string\"}]}",
+          "label": "Expense extraction: prompts/expense-extract.txt: Analyze the following emails and extract expense/receipt information from each.\nFor each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),\ncategory (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.\n\nEmails:\n{{emails}}\n\nExtract expense details from each email. If an email contains multiple transactions,\ncreate separate entries for each.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"expenses\": [{\"emailId\": \"string\", \"merchant\": \"string\", \"amount\": number, \"date\": \"YYYY-MM-DD\", \"category\": \"Food|Transport|Entertainment|Bills|Shopping|Other\", \"description\": \"string\"}]}",
+          "config": {
+            "disableVarExpansion": true
+          }
+        },
+        "promptId": "0008d84b720daef4749277bfc7437ccd25aec12f376ba27a0f118191b9916c77",
+        "promptIdx": 1,
+        "provider": {
+          "id": "google:gemini-2.0-flash",
+          "label": "Gemini 2.0 Flash"
+        },
+        "response": {
+          "output": "```json\n{\n  \"expenses\": [\n    {\n      \"emailId\": \"ex-3\",\n      \"merchant\": \"Lyft\",\n      \"amount\": 22.30,\n      \"date\": \"2025-02-03\",\n      \"category\": \"Transport\",\n      \"description\": \"Trip from A to B\"\n    }\n  ]\n}\n```",
+          "tokenUsage": {
+            "prompt": 237,
+            "completion": 92,
+            "total": 329,
+            "numRequests": 1
+          },
+          "cost": 0.00006050000000000001,
+          "raw": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "```json\n{\n  \"expenses\": [\n    {\n      \"emailId\": \"ex-3\",\n      \"merchant\": \"Lyft\",\n      \"amount\": 22.30,\n      \"date\": \"2025-02-03\",\n      \"category\": \"Transport\",\n      \"description\": \"Trip from A to B\"\n    }\n  ]\n}\n```"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "avgLogprobs": -0.0037522222036900726
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 237,
+              "candidatesTokenCount": 92,
+              "totalTokenCount": 329,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 237
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 92
+                }
+              ]
+            },
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "UvmdabHbJIat-8YPuIL0kAc"
+          },
+          "cached": false,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "Extract - valid category and YYYY-MM-DD date",
+          "prompts": [
+            "Expense extraction"
+          ],
+          "vars": {
+            "emails": "[\n  {\"id\":\"ex-3\",\"from\":\"receipts@lyft.com\",\"subject\":\"Your Lyft receipt\",\"date\":\"Mon, 03 Feb 2025 08:15:00 GMT\",\"body\":\"Trip from A to B. Total charged: $22.30. Thank you for riding.\"}\n]\n",
+            "expectedMinExpenses": 1
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://assertions/extract-assertions.js",
+              "metric": "extract_accuracy"
+            },
+            {
+              "type": "javascript",
+              "value": "file://assertions/extract-amount-date-assertions.js",
+              "threshold": 0.95
+            }
+          ],
+          "options": {
+            "disableVarExpansion": true
+          },
+          "metadata": {}
+        },
+        "testIdx": 6,
+        "vars": {
+          "emails": "[\n  {\"id\":\"ex-3\",\"from\":\"receipts@lyft.com\",\"subject\":\"Your Lyft receipt\",\"date\":\"Mon, 03 Feb 2025 08:15:00 GMT\",\"body\":\"Trip from A to B. Total charged: $22.30. Thank you for riding.\"}\n]\n",
+          "expectedMinExpenses": 1
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0.0000262,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "extract_accuracy": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Extract output is valid"
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "No expenses (amount/date N/A)"
+            }
+          ]
+        },
+        "id": "ce36453f-c855-4f8b-9c82-900cdf0742a5",
+        "latencyMs": 472,
+        "namedScores": {
+          "extract_accuracy": 1
+        },
+        "prompt": {
+          "raw": "Analyze the following emails and extract expense/receipt information from each.\nFor each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),\ncategory (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.\n\nEmails:\n[\n  {\"id\":\"ex-4\",\"from\":\"support@bank.com\",\"subject\":\"Your statement is ready\",\"date\":\"01 Feb 2025\",\"body\":\"Your monthly statement is available to view. Log in to see details. This is not a receipt.\"}\n]\n\nExtract expense details from each email. If an email contains multiple transactions,\ncreate separate entries for each.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"expenses\": [{\"emailId\": \"string\", \"merchant\": \"string\", \"amount\": number, \"date\": \"YYYY-MM-DD\", \"category\": \"Food|Transport|Entertainment|Bills|Shopping|Other\", \"description\": \"string\"}]}",
+          "label": "Expense extraction: prompts/expense-extract.txt: Analyze the following emails and extract expense/receipt information from each.\nFor each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),\ncategory (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.\n\nEmails:\n{{emails}}\n\nExtract expense details from each email. If an email contains multiple transactions,\ncreate separate entries for each.\n\nYou must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.\nFormat: {\"expenses\": [{\"emailId\": \"string\", \"merchant\": \"string\", \"amount\": number, \"date\": \"YYYY-MM-DD\", \"category\": \"Food|Transport|Entertainment|Bills|Shopping|Other\", \"description\": \"string\"}]}",
+          "config": {
+            "disableVarExpansion": true
+          }
+        },
+        "promptId": "0008d84b720daef4749277bfc7437ccd25aec12f376ba27a0f118191b9916c77",
+        "promptIdx": 1,
+        "provider": {
+          "id": "google:gemini-2.0-flash",
+          "label": "Gemini 2.0 Flash"
+        },
+        "response": {
+          "output": "```json\n{\"expenses\": []}\n```",
+          "tokenUsage": {
+            "prompt": 222,
+            "completion": 10,
+            "total": 232,
+            "numRequests": 1
+          },
+          "cost": 0.0000262,
+          "raw": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "```json\n{\"expenses\": []}\n```"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "avgLogprobs": -0.0015882514417171478
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 222,
+              "candidatesTokenCount": 10,
+              "totalTokenCount": 232,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 222
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 10
+                }
+              ]
+            },
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "UvmdaYWsK-aUjrEPn9K1sAM"
+          },
+          "cached": false,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "Extract - no expenses from non-receipt email (empty or minimal)",
+          "prompts": [
+            "Expense extraction"
+          ],
+          "vars": {
+            "emails": "[\n  {\"id\":\"ex-4\",\"from\":\"support@bank.com\",\"subject\":\"Your statement is ready\",\"date\":\"01 Feb 2025\",\"body\":\"Your monthly statement is available to view. Log in to see details. This is not a receipt.\"}\n]\n"
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://assertions/extract-assertions.js",
+              "metric": "extract_accuracy"
+            },
+            {
+              "type": "javascript",
+              "value": "file://assertions/extract-amount-date-assertions.js",
+              "threshold": 0.95
+            }
+          ],
+          "options": {
+            "disableVarExpansion": true
+          },
+          "metadata": {}
+        },
+        "testIdx": 7,
+        "vars": {
+          "emails": "[\n  {\"id\":\"ex-4\",\"from\":\"support@bank.com\",\"subject\":\"Your statement is ready\",\"date\":\"01 Feb 2025\",\"body\":\"Your monthly statement is available to view. Log in to see details. This is not a receipt.\"}\n]\n"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      }
+    ],
+    "stats": {
+      "successes": 8,
+      "failures": 0,
+      "errors": 0,
+      "tokenUsage": {
+        "prompt": 1656,
+        "completion": 294,
+        "cached": 0,
+        "total": 1950,
+        "numRequests": 8,
+        "completionDetails": {
+          "reasoning": 0,
+          "acceptedPrediction": 0,
+          "rejectedPrediction": 0
+        },
+        "assertions": {
+          "total": 0,
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "numRequests": 0,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0
+          }
+        }
+      },
+      "durationMs": 2940,
+      "evaluationDurationMs": 2940
+    }
+  },
+  "config": {
+    "tags": {
+      "feature": "email-import",
+      "application": "expense-tracker"
+    },
+    "description": "Email CSV → LLM receipt detection & expense extraction (for DB upload)",
+    "prompts": [
+      {
+        "id": "email-filter",
+        "label": "Email receipt filter",
+        "raw": "file://prompts/email-filter.txt"
+      },
+      {
+        "id": "expense-extract",
+        "label": "Expense extraction",
+        "raw": "file://prompts/expense-extract.txt"
+      }
+    ],
+    "providers": [
+      {
+        "id": "google:gemini-2.0-flash",
+        "label": "Gemini 2.0 Flash"
+      }
+    ],
+    "tests": [
+      "file://tests/filter.yaml",
+      "file://tests/extract.yaml"
+    ],
+    "defaultTest": {
+      "options": {
+        "disableVarExpansion": true
+      }
+    },
+    "outputPath": [
+      "evals/output/results.json",
+      "evals/output/results.html"
+    ],
+    "extensions": [],
+    "evaluateOptions": {
+      "maxConcurrency": 2,
+      "timeoutMs": 60000,
+      "cache": true
+    }
+  },
+  "shareableUrl": null,
+  "metadata": {
+    "promptfooVersion": "0.120.25",
+    "nodeVersion": "v20.20.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "exportedAt": "2026-02-24T19:17:39.745Z",
+    "evaluationCreatedAt": "2026-02-24T19:17:36.534Z"
+  }
+}

@@ -116,8 +116,15 @@ Emails:
 ${JSON.stringify(emailSummaries, null, 2)}
 
 Return the IDs of emails that contain receipt or transaction information.
-Only include emails that represent actual purchases or expenses.
-Do NOT include newsletters, promotional emails, or general communications.`;
+Only include emails that represent actual purchases or expenses (money paid by the recipient).
+
+Include: order confirmations (e.g. "order confirmed", "order is confirmed", "Thanks for your order"—include grocery/delivery confirmations like Instacart "order is confirmed" even if the total is charged at checkout), payment confirmations, trip receipts, purchase receipts. If the subject or body indicates a purchase was made or payment received, include it.
+Do NOT include:
+- Newsletters, promotional emails, or marketing (deals, flyers, sale announcements).
+- Shipping/shipment notifications. Exclude if the subject starts with "Shipped:" or the sender is "shipment-tracking@" or the body says "Your package was shipped" / "Out for delivery". Only the initial "Ordered:" / order confirmation email is a receipt; shipment tracking is not.
+- Refunds or refund confirmations (money returned is not an expense).
+- Booking or event details (itinerary, party package info, "Thank you for booking") that do not explicitly confirm a payment or total charged in that email. If the email only describes the event and no payment received line, exclude it.
+- General communications, reminders, or non-transactional messages.`;
 
     const result = await model.generateContent(prompt);
     const response = result.response;
@@ -138,25 +145,25 @@ export async function extractExpensesFromEmails(emails: Email[]): Promise<BatchE
   try {
     const model = getBatchExtractModel();
 
+    const emailsPayload = emails.map((e) => ({
+      id: e.id,
+      from: e.from,
+      subject: e.subject,
+      date: e.date,
+      body: e.body,
+    }));
+
     const prompt = `Analyze the following emails and extract expense/receipt information from each.
 For each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),
 category (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.
 
 Emails:
-${JSON.stringify(
-  emails.map((e) => ({
-    id: e.id,
-    from: e.from,
-    subject: e.subject,
-    date: e.date,
-    body: e.body,
-  })),
-  null,
-  2
-)}
+${JSON.stringify(emailsPayload, null, 2)}
 
-Extract expense details from each email. If an email contains multiple transactions,
-create separate entries for each.`;
+Extract expense details only from emails that confirm a purchase or payment (order confirmations, payment confirmations, receipts).
+If an email contains multiple transactions, create separate entries for each.
+Use the order/purchase date or the email date for the date field. Use the total amount charged/paid when a single total is shown. Amount must be a number (use 0 only if no amount is stated and you still need to record the transaction).
+Do NOT extract from: refund emails; shipping/shipment notifications (e.g. subject "Shipped:", body "Your package was shipped"—these are status updates, not receipts); newsletters or promotional emails. For those, return empty expenses array.`;
 
     const result = await model.generateContent(prompt);
     const response = result.response;

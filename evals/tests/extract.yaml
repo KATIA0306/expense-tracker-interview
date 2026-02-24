@@ -1,0 +1,129 @@
+# Expense extraction tests: parse amount, date, category, description from receipt emails
+# Used with prompt: Expense extraction
+
+- description: "Extract - single receipt with clear total and date"
+  prompts: ["Expense extraction"]
+  vars:
+    emails: |
+      [
+        {"id":"ex-1","from":"orders@coffee-shop.com","subject":"Your receipt #4421","date":"Wed, 22 Jan 2025 10:30:00 -0500","body":"Thank you for your order. Total: $12.75. Date: January 22, 2025. Card ending 4242."}
+      ]
+    expectedMinExpenses: 1
+  assert:
+    - type: javascript
+      value: file://assertions/extract-assertions.js
+      metric: extract_accuracy
+    - type: javascript
+      value: file://assertions/extract-amount-date-assertions.js
+      threshold: 0.95
+
+- description: "Extract - grocery receipt with multiple line items (single total)"
+  prompts: ["Expense extraction"]
+  vars:
+    emails: |
+      [
+        {"id":"ex-2","from":"noreply@instacart.com","subject":"Your No Frills order confirmation","date":"Fri, 30 Jan 2026 14:55:58 +0000","body":"Your order is confirmed. Delivery today 1pm-4pm. Order total: $87.42. Items: milk, bread, eggs. Service fee may apply."}
+      ]
+    expectedMinExpenses: 1
+  assert:
+    - type: javascript
+      value: file://assertions/extract-assertions.js
+      metric: extract_accuracy
+    - type: javascript
+      value: file://assertions/extract-amount-date-assertions.js
+      threshold: 0.95
+
+- description: "Extract - valid category and YYYY-MM-DD date"
+  prompts: ["Expense extraction"]
+  vars:
+    emails: |
+      [
+        {"id":"ex-3","from":"receipts@lyft.com","subject":"Your Lyft receipt","date":"Mon, 03 Feb 2025 08:15:00 GMT","body":"Trip from A to B. Total charged: $22.30. Thank you for riding."}
+      ]
+    expectedMinExpenses: 1
+  assert:
+    - type: javascript
+      value: file://assertions/extract-assertions.js
+      metric: extract_accuracy
+    - type: javascript
+      value: file://assertions/extract-amount-date-assertions.js
+      threshold: 0.95
+
+- description: "Extract - no expenses from non-receipt email (empty or minimal)"
+  prompts: ["Expense extraction"]
+  vars:
+    emails: |
+      [
+        {"id":"ex-4","from":"support@bank.com","subject":"Your statement is ready","date":"01 Feb 2025","body":"Your monthly statement is available to view. Log in to see details. This is not a receipt."}
+      ]
+  assert:
+    - type: javascript
+      value: file://assertions/extract-assertions.js
+      metric: extract_accuracy
+    - type: javascript
+      value: file://assertions/extract-amount-date-assertions.js
+      threshold: 0.95
+
+# --- Tests from emailData_exercise.csv ---
+
+- description: "Extract (CSV) - Reptilia Payment Confirmation"
+  prompts: ["Expense extraction"]
+  vars:
+    emails: |
+      [
+        {"id":"19c0276a5d30f977","from":"bookings.vaughan@reptilia.org","subject":"Payment Confirmation","date":"28 Jan 2026 02:37:31 +0000","body":"Order #: 9352 Thank you for your payment! Amount paid: $450.00. A copy of your invoice is attached to this email for your records."}
+      ]
+    expectedMinExpenses: 1
+  assert:
+    - type: javascript
+      value: file://assertions/extract-assertions.js
+      metric: extract_accuracy
+    - type: javascript
+      value: file://assertions/extract-amount-date-assertions.js
+      threshold: 0.95
+
+- description: "Extract (CSV) - Amazon order with total and date"
+  prompts: ["Expense extraction"]
+  vars:
+    emails: |
+      [
+        {"id":"19bd20ce7f5635d5","from":"Amazon.ca <auto-confirm@amazon.ca>","subject":"Ordered: Hefty Basics Freezer...","date":"Sun, 18 Jan 2026 17:00:18 +0000","body":"Thanks for your order, jane! Order # 701-7828946-9057041. Hefty Basics Freezer Bags/Food Ba... Quantity: 1 $11.99 Total $13.55. View or edit order."}
+      ]
+    expectedMinExpenses: 1
+  assert:
+    - type: javascript
+      value: file://assertions/extract-assertions.js
+      metric: extract_accuracy
+    - type: javascript
+      value: file://assertions/extract-amount-date-assertions.js
+      threshold: 0.95
+
+- description: "Extract (CSV) - No expenses from shipping notification only"
+  prompts: ["Expense extraction"]
+  vars:
+    emails: |
+      [
+        {"id":"19be777b260a586f","from":"Amazon.ca <shipment-tracking@amazon.ca>","subject":"Shipped: Medline Standard Aluminum...","date":"Thu, 22 Jan 2026 20:48:59 +0000","body":"Your package was shipped! Track package. Order # 701-0119813-7473017. Total $33.38. Your invoice can be accessed here."}
+      ]
+  assert:
+    - type: javascript
+      value: file://assertions/extract-assertions.js
+      metric: extract_accuracy
+    - type: javascript
+      value: file://assertions/extract-amount-date-assertions.js
+      threshold: 0.95
+
+- description: "Extract (CSV) - No expenses from newsletter"
+  prompts: ["Expense extraction"]
+  vars:
+    emails: |
+      [
+        {"id":"19c03fbcdb5b9f09","from":"Audible.ca <newsletters@audible.ca>","subject":"Last Chance! Get 3 months for $0.99/month","date":"Wed, 28 Jan 2026 09:42:38 +0000","body":"There's still time to save. Get this deal. Auto-renews at $14.95/mo after 3 months. Offer ends January 29, 2026."}
+      ]
+  assert:
+    - type: javascript
+      value: file://assertions/extract-assertions.js
+      metric: extract_accuracy
+    - type: javascript
+      value: file://assertions/extract-amount-date-assertions.js
+      threshold: 0.95
