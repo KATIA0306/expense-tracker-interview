@@ -152,9 +152,9 @@ export function EmailImport() {
             body: values[bodyIndex] || '',
           };
 
-          // Validate required fields
-          if (!email.from || !email.subject || !email.date || !email.body) {
-            setParseError(`Row ${i + 1} is missing required data`);
+          // Validate required fields (body can be empty for some emails)
+          if (!email.from || !email.subject || !email.date) {
+            setParseError(`Row ${i + 1} is missing required data (from, subject, date)`);
             setEmails([]);
             return;
           }

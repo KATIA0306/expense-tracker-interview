@@ -63,6 +63,16 @@ npx promptfoo view
 - **Prompts** mirror the instructions in `backend/src/services/llmService.ts` (filter + extract).
 - **Assertions**: Valid JSON, correct shape, and (for filter) expected receipt IDs included/excluded; (for extract) required fields, numeric amount, YYYY-MM-DD date, category in allowed set.
 
+## Eval vs real data
+
+Evals use sanitized test data; real CSV emails often have:
+- **RFC 2822 dates** (e.g. "Thu, 22 Jan 2026 15:31:30 +0000") — prompts now instruct parsing to YYYY-MM-DD.
+- **Amount formats**: $33.38, CA$56.51, CAD 305.08, or "Total $ 33 38" (spaces = decimal).
+- **Missing amounts** — e.g. "Thank you for your payment! Invoice attached" — use 0 per prompt.
+- **HTML entities** — filter prompt instructs ignoring formatting noise.
+
+Tests include real CSV body samples (Reptilia, Amazon, Making Dream, Old Navy) to better match production.
+
 ## Best practices used
 
 - **Two evaluation suites** (filter vs extract) with separate prompts and test cases.

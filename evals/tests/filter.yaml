@@ -87,14 +87,15 @@
 
 # --- Tests from emailData_exercise.csv ---
 
-- description: "Filter (CSV) - Instacart order confirmed is receipt"
+# "You will be charged at checkout" = pre-checkout confirmation, not a receipt (money not yet paid)
+- description: "Filter (CSV) - Instacart order confirmed (charged at checkout) is NOT receipt"
   prompts: ["Email receipt filter"]
   vars:
     emailSummaries: |
       [
         {"id":"19c0f6767b4b28a6","from":"Instacart <orders@instacart.com>","subject":"Your No Frills order is confirmed for January 30","bodyPreview":"Hi jane313, your No Frills order is all set. Delivery today from 1pm - 4pm. Items in your order. You will be charged at checkout. Service fees or tips may still apply."}
       ]
-    expectedReceiptIds: ["19c0f6767b4b28a6"]
+    expectedNotReceiptIds: ["19c0f6767b4b28a6"]
   assert:
     - type: javascript
       value: file://assertions/filter-assertions.js

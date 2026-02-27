@@ -66,12 +66,13 @@
 
 # --- Tests from emailData_exercise.csv ---
 
-- description: "Extract (CSV) - Reptilia Payment Confirmation"
+# Reptilia: real CSV body has NO amount (invoice attached). Model should use 0 and parse date from RFC format.
+- description: "Extract (CSV) - Reptilia Payment Confirmation (no amount in body - use 0)"
   prompts: ["Expense extraction"]
   vars:
     emails: |
       [
-        {"id":"19c0276a5d30f977","from":"bookings.vaughan@reptilia.org","subject":"Payment Confirmation","date":"28 Jan 2026 02:37:31 +0000","body":"Order #: 9352 Thank you for your payment! Amount paid: $450.00. A copy of your invoice is attached to this email for your records."}
+        {"id":"19c0276a5d30f977","from":"bookings.vaughan@reptilia.org","subject":"Payment Confirmation","date":"28 Jan 2026 02:37:31 +0000","body":"Order #: 9352 Thank you for your payment! A copy of your invoice is attached to this email for your records."}
       ]
     expectedMinExpenses: 1
   assert:
@@ -82,12 +83,13 @@
       value: file://assertions/extract-amount-date-assertions.js
       threshold: 0.95
 
-- description: "Extract (CSV) - Amazon order with total and date"
+# Real CSV body format: "Total $ 11 99" (spaces) and "Total $13.55" - model must parse correctly
+- description: "Extract (CSV) - Amazon order with total and date (real body format)"
   prompts: ["Expense extraction"]
   vars:
     emails: |
       [
-        {"id":"19bd20ce7f5635d5","from":"Amazon.ca <auto-confirm@amazon.ca>","subject":"Ordered: Hefty Basics Freezer...","date":"Sun, 18 Jan 2026 17:00:18 +0000","body":"Thanks for your order, jane! Order # 701-7828946-9057041. Hefty Basics Freezer Bags/Food Ba... Quantity: 1 $11.99 Total $13.55. View or edit order."}
+        {"id":"19bd20ce7f5635d5","from":"Amazon.ca <auto-confirm@amazon.ca>","subject":"Ordered: Hefty Basics Freezer...","date":"Sun, 18 Jan 2026 17:00:18 +0000","body":"Thanks for your order, jane! Ordered Shipped Out for delivery Delivered Arriving tomorrow jane – Maple, Ontario Order # 701-7828946-9057041 View or edit order Hefty Basics Freezer Bags/Food Ba... Quantity: 1 $ 11 99 Total $13.55 ©2026 Amazon.com, Inc."}
       ]
     expectedMinExpenses: 1
   assert:
@@ -120,6 +122,39 @@
       [
         {"id":"19c03fbcdb5b9f09","from":"Audible.ca <newsletters@audible.ca>","subject":"Last Chance! Get 3 months for $0.99/month","date":"Wed, 28 Jan 2026 09:42:38 +0000","body":"There's still time to save. Get this deal. Auto-renews at $14.95/mo after 3 months. Offer ends January 29, 2026."}
       ]
+  assert:
+    - type: javascript
+      value: file://assertions/extract-assertions.js
+      metric: extract_accuracy
+    - type: javascript
+      value: file://assertions/extract-amount-date-assertions.js
+      threshold: 0.95
+
+# Real CSV receipts with clear totals - Making Dream flowers, Old Navy order
+- description: "Extract (CSV) - Making Dream order with CAD total"
+  prompts: ["Expense extraction"]
+  vars:
+    emails: |
+      [
+        {"id":"19b419072a0756df","from":"Making Dream <info@makingdream.ca>","subject":"Your Making Dream order is now complete","date":"Sun, 21 Dec 2025 10:39:02 -0500","body":"Your Making Dream order is now complete. Order summary Order #41607 (17 December 2025). 50 Premium Mixed Color Roses Bouquet. Subtotal: CAD 269.98. HST (13%): CAD 35.10. Total: CAD 305.08. Payment method: Debit & Credit Cards. Pickup Date December 21, 2025."}
+      ]
+    expectedMinExpenses: 1
+  assert:
+    - type: javascript
+      value: file://assertions/extract-assertions.js
+      metric: extract_accuracy
+    - type: javascript
+      value: file://assertions/extract-amount-date-assertions.js
+      threshold: 0.95
+
+- description: "Extract (CSV) - Old Navy order with CA$ total"
+  prompts: ["Expense extraction"]
+  vars:
+    emails: |
+      [
+        {"id":"19b097b2022cc3c0","from":"Old Navy Canada <orders@email.oldnavy.ca>","subject":"Order Confirmation #1P4V21D","date":"Wed, 10 Dec 2025 12:17:02 -0600","body":"Order Confirmation #1P4V21D. Your order #1P4V21D has been received. Total CA$56.51. Visa – 9933 (CA$56.51). Subtotal (3 items) CA$44.97. Rewards -CA$2.00. Shipping CA$9.00. Est Tax CA$4.54. Total CA$56.51."}
+      ]
+    expectedMinExpenses: 1
   assert:
     - type: javascript
       value: file://assertions/extract-assertions.js
