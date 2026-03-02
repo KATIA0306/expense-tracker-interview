@@ -74,3 +74,7 @@ After seeding, you can login with:
 
 ### Categories
 - `GET /api/categories` - List all categories
+
+### Email import (CSV → LLM → DB)
+- **Feature**: Upload a CSV of email data; an LLM parses out purchases/expenses and you can upload them to the database.
+- **LLM evaluations**: See [evals/README.md](evals/README.md) for promptfoo-based evals (email receipt filter + expense extraction). Run from repo root: `npx promptfoo eval -c evals/promptfooconfig.yaml` or from backend: `npm run eval:emails`. Requires `GOOGLE_API_KEY` or `GEMINI_API_KEY`.

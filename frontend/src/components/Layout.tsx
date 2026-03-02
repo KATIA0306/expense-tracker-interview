@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Receipt, LogOut, Upload } from 'lucide-react';
+import { LayoutDashboard, Receipt, LogOut, Upload, Sparkles } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,7 +12,8 @@ export function Layout({ children, onLogout }: LayoutProps) {
   const navItems = [
     { path: '/', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/expenses', label: 'Expenses', icon: Receipt },
-    { path: '/import', label: 'Import', icon: Upload },
+    { path: '/import', label: 'Import CSV', icon: Upload },
+    { path: '/ai-import', label: 'Scan Emails', icon: Sparkles },
   ];
 
   return (

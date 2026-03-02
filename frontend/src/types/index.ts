@@ -126,3 +126,27 @@ export interface ImportResult {
   skippedCount: number;
   history: ImportHistory;
 }
+
+// Email scanning types
+export interface EmailData {
+  id: string;
+  from: string;
+  subject: string;
+  date: string;
+  body: string;
+}
+
+export interface DraftExpense {
+  emailId: string;
+  merchant: string;
+  amount: number;
+  date: string;
+  description: string;
+  categoryId: number;
+  categoryName: string;
+}
+
+export interface ScanEmailsResult {
+  expenses: DraftExpense[];
+  message?: string;
+}

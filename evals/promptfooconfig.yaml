@@ -1,0 +1,38 @@
+# Promptfoo evaluation for: Upload CSV of email data → LLM parses purchases/expenses → upload to DB
+# Run from repo root: npx promptfoo eval -c evals/promptfooconfig.yaml --env-path backend/.env
+# Run from evals/:   npx promptfoo eval --env-path ../backend/.env
+# (Promptfoo accepts GOOGLE_API_KEY or GEMINI_API_KEY.)
+
+description: "Email CSV → LLM receipt detection & expense extraction (for DB upload)"
+tags:
+  feature: email-import
+  application: expense-tracker
+
+providers:
+  - id: google:gemini-2.0-flash
+    label: Gemini 2.0 Flash
+
+prompts:
+  - id: email-filter
+    label: Email receipt filter
+    raw: file://prompts/email-filter.txt
+  - id: expense-extract
+    label: Expense extraction
+    raw: file://prompts/expense-extract.txt
+
+defaultTest:
+  options:
+    disableVarExpansion: true
+
+evaluateOptions:
+  maxConcurrency: 2
+  timeoutMs: 60000
+  cache: true
+
+tests:
+  - file://tests/filter.yaml
+  - file://tests/extract.yaml
+
+outputPath:
+  - output/results.json
+  - output/results.html

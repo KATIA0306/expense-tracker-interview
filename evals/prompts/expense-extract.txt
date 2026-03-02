@@ -1,0 +1,14 @@
+Analyze the following emails and extract expense/receipt information from each.
+For each email, extract: merchant name, amount spent, date (YYYY-MM-DD format),
+category (Food, Transport, Entertainment, Bills, Shopping, or Other), and a brief description.
+
+Emails:
+{{emails}}
+
+Extract expense details only from emails that confirm a purchase or payment (order confirmations, payment confirmations, receipts).
+If an email contains multiple transactions, create separate entries for each.
+Use the order/purchase date or the email date for the date field. Use the total amount charged/paid when a single total is shown. Amount must be a number (use 0 only if no amount is stated and you still need to record the transaction).
+Do NOT extract from: refund emails; shipping/shipment notifications (e.g. subject "Shipped:", body "Your package was shipped"—these are status updates, not receipts); newsletters or promotional emails. For those, return empty expenses array.
+
+You must respond with ONLY valid JSON and nothing else. No markdown, no code fences, no explanation.
+Format: {"expenses": [{"emailId": "string", "merchant": "string", "amount": number, "date": "YYYY-MM-DD", "category": "Food|Transport|Entertainment|Bills|Shopping|Other", "description": "string"}]}

@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "eval": "cd evals && promptfoo eval --env-path ../backend/.env"
+  },
+  "devDependencies": {
+    "promptfoo": "^0.120.25"
+  }
+}

@@ -1,0 +1,210 @@
+# Email receipt filter tests: identify which emails contain receipts/transactions
+# Used with prompt: Email receipt filter
+
+- description: "Filter - single clear receipt email is identified"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"rec-001","from":"orders@amazon.com","subject":"Your Amazon.com order of \"Coffee\" has shipped","bodyPreview":"Order total: $24.99. Order date: January 15, 2025. Thank you for your purchase."}
+      ]
+    expectedReceiptIds: ["rec-001"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter - newsletter is excluded from receipts"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"news-001","from":"newsletter@retailer.com","subject":"Weekly deals inside!","bodyPreview":"Check out this week's tips and promotions. No purchase required. Click here to browse."}
+      ]
+    expectedNotReceiptIds: ["news-001"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter - mixed: one receipt, one newsletter"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"rec-002","from":"receipts@uber.com","subject":"Your trip receipt","bodyPreview":"Trip total $18.50. Payment completed. Thank you for riding with Uber."},
+        {"id":"news-002","from":"marketing@store.com","subject":"Spring sale preview","bodyPreview":"Get early access to our spring sale. No purchase necessary."}
+      ]
+    expectedReceiptIds: ["rec-002"]
+    expectedNotReceiptIds: ["news-002"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter - empty list when no receipts"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"evt-001","from":"events@meetup.com","subject":"Reminder: Meetup tomorrow","bodyPreview":"Your event is scheduled for tomorrow at 6pm. See you there!"}
+      ]
+    expectedNotReceiptIds: ["evt-001"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter - order statuses: only purchase confirmation is receipt, status updates are not"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"ord-conf","from":"orders@shop.com","subject":"Order confirmed - Order #12345","bodyPreview":"Thank you for your order. Total charged: $89.99. Order date: Feb 20, 2025."},
+        {"id":"ord-proc","from":"orders@shop.com","subject":"Order #12345 has been processed","bodyPreview":"Your order is being prepared. No additional charge. We'll notify you when it ships."},
+        {"id":"ord-ship","from":"orders@shop.com","subject":"Order #12345 has shipped","bodyPreview":"Your order is on its way. Track your package. Delivery by Feb 25."},
+        {"id":"ord-deliv","from":"orders@shop.com","subject":"Order #12345 delivered","bodyPreview":"Your order was delivered. Hope you enjoy your purchase!"}
+      ]
+    expectedReceiptIds: ["ord-conf"]
+    expectedNotReceiptIds: ["ord-proc", "ord-ship", "ord-deliv"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter - refund email is not an expense (should not be considered receipt)"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"ref-001","from":"refunds@store.com","subject":"Your refund of $45.00 has been processed","bodyPreview":"We've refunded $45.00 to your original payment method. Refund for Order #67890. You should see the amount within 5-7 business days."}
+      ]
+    expectedNotReceiptIds: ["ref-001"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+# --- Tests from emailData_exercise.csv ---
+
+# "You will be charged at checkout" = pre-checkout confirmation, not a receipt (money not yet paid)
+- description: "Filter (CSV) - Instacart order confirmed (charged at checkout) is NOT receipt"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"19c0f6767b4b28a6","from":"Instacart <orders@instacart.com>","subject":"Your No Frills order is confirmed for January 30","bodyPreview":"Hi jane313, your No Frills order is all set. Delivery today from 1pm - 4pm. Items in your order. You will be charged at checkout. Service fees or tips may still apply."}
+      ]
+    expectedNotReceiptIds: ["19c0f6767b4b28a6"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter (CSV) - Reptilia Payment Confirmation is receipt"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"19c0276a5d30f977","from":"bookings.vaughan@reptilia.org","subject":"Payment Confirmation","bodyPreview":"Order #: 9352 Thank you for your payment! A copy of your invoice is attached to this email for your records."}
+      ]
+    expectedReceiptIds: ["19c0276a5d30f977"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter (CSV) - Amazon Ordered (order confirmation with total) is receipt"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"19be65509aa23ce8","from":"Amazon.ca <auto-confirm@amazon.ca>","subject":"Ordered: Medline Standard Aluminum...","bodyPreview":"Thanks for your order, jane! Order # 701-0119813-7473017. Medline Standard Aluminum Crutche... Quantity: 1. Total $33.38. View or edit order."}
+      ]
+    expectedReceiptIds: ["19be65509aa23ce8"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter (CSV) - Amazon Shipped (shipment notification only) is NOT receipt"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"19be777b260a586f","from":"Amazon.ca <shipment-tracking@amazon.ca>","subject":"Shipped: Medline Standard Aluminum...","bodyPreview":"Your package was shipped! Track package. Order # 701-0119813-7473017. Out for delivery. Your invoice can be accessed here."}
+      ]
+    expectedNotReceiptIds: ["19be777b260a586f"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter (CSV) - Birthday booking details (no payment in body) is NOT receipt"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"19c054aa96b15d3d","from":"Reptilia Vaughan Bookings <bookings.vaughan@reptilia.org>","subject":"Birthday Bookings SO# 9352","bodyPreview":"Thank you for booking your birthday with us! Party Itinerary: 9:45-10:00AM Bring party supplies. 10:00-11:00AM Food, cake, celebrations. Package Reminders. Punctuality and cancellation policies. We look forward to celebrating with you."}
+      ]
+    expectedNotReceiptIds: ["19c054aa96b15d3d"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter (CSV) - Audible promotional newsletter is NOT receipt"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"19c03fbcdb5b9f09","from":"Audible.ca <newsletters@audible.ca>","subject":"Last Chance! Get 3 months for $0.99/month","bodyPreview":"There's still time to save more than 90%. Get this deal. Auto-renews at $14.95/mo after 3 months. Cancel anytime. Offer ends January 29, 2026."}
+      ]
+    expectedNotReceiptIds: ["19c03fbcdb5b9f09"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter (CSV) - Etsy marketing email is NOT receipt"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"19bf05c8c7f135e7","from":"Etsy <email@email.etsy.com>","subject":"Work it out - Fitness finds","bodyPreview":"Fitness finds to refresh your routine. Re-energize your workout. Smash your goals. See more. Shop now. You are receiving this email because you registered on Etsy.com."}
+      ]
+    expectedNotReceiptIds: ["19bf05c8c7f135e7"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter (CSV) - Mixed: Payment Confirmation receipt + Birthday booking not receipt"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"19c0276a5d30f977","from":"bookings.vaughan@reptilia.org","subject":"Payment Confirmation","bodyPreview":"Order #: 9352 Thank you for your payment! A copy of your invoice is attached."},
+        {"id":"19c054aa96b15d3d","from":"Reptilia Vaughan Bookings","subject":"Birthday Bookings SO# 9352","bodyPreview":"Thank you for booking your birthday! Party Itinerary and package reminders. Additional 30-Minutes: $75.00."}
+      ]
+    expectedReceiptIds: ["19c0276a5d30f977"]
+    expectedNotReceiptIds: ["19c054aa96b15d3d"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy
+
+- description: "Filter (CSV) - Order confirmation receipt vs Shipped status: only order is receipt"
+  prompts: ["Email receipt filter"]
+  vars:
+    emailSummaries: |
+      [
+        {"id":"19be65509aa23ce8","from":"Amazon.ca <auto-confirm@amazon.ca>","subject":"Ordered: Medline Standard Aluminum...","bodyPreview":"Thanks for your order! Total $33.38. View or edit order."},
+        {"id":"19be777b260a586f","from":"Amazon.ca <shipment-tracking@amazon.ca>","subject":"Shipped: Medline Standard Aluminum...","bodyPreview":"Your package was shipped! Track package. Total $33.38."}
+      ]
+    expectedReceiptIds: ["19be65509aa23ce8"]
+    expectedNotReceiptIds: ["19be777b260a586f"]
+  assert:
+    - type: javascript
+      value: file://assertions/filter-assertions.js
+      metric: filter_accuracy

@@ -5,6 +5,7 @@ import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { Expenses } from './pages/Expenses';
 import { Import } from './pages/Import';
+import { EmailImport } from './pages/EmailImport';
 
 export default function App() {
   const {
@@ -55,6 +56,7 @@ export default function App() {
         />
         <Route path="/expenses" element={<Expenses />} />
         <Route path="/import" element={<Import />} />
+        <Route path="/ai-import" element={<EmailImport />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
