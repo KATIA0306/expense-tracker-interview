@@ -78,6 +78,61 @@ function assertExtractOutput(firstArg, secondArg) {
     score -= 0.2;
   }
 
+  // Optional: if test provides expectedAmount, verify at least one expense has this amount
+  const expectedAmt = vars.expectedAmount;
+  if (typeof expectedAmt === 'number' && parsed.expenses.length > 0) {
+    const epsilon = 0.01;
+    const found = parsed.expenses.some(
+      (e) => typeof e.amount === 'number' && Math.abs(e.amount - expectedAmt) < epsilon
+    );
+    if (!found) {
+      const amounts = parsed.expenses.map((e) => e.amount).join(', ');
+      reasons.push(`Expected amount ~${expectedAmt}, got: ${amounts}`);
+      score -= 0.2;
+    }
+  }
+
+  // Optional: if test provides expectedMerchant, verify at least one expense matches (case-insensitive substring)
+  // Supports "A|B" for multiple acceptable values
+  const expectedMerchant = vars.expectedMerchant;
+  if (typeof expectedMerchant === 'string' && expectedMerchant && parsed.expenses.length > 0) {
+    const expList = expectedMerchant.split('|').map((s) => s.trim().toLowerCase()).filter(Boolean);
+    const found = parsed.expenses.some((e) => {
+      const m = String(e.merchant || '').toLowerCase();
+      return expList.some((exp) => m.includes(exp) || exp.includes(m));
+    });
+    if (!found) {
+      const merchants = parsed.expenses.map((e) => e.merchant).join(', ');
+      reasons.push(`Expected merchant containing "${expectedMerchant}", got: ${merchants}`);
+      score -= 0.2;
+    }
+  }
+
+  // Optional: if test provides expectedDate, verify at least one expense has this date (YYYY-MM-DD)
+  const expectedDate = vars.expectedDate;
+  if (typeof expectedDate === 'string' && DATE_REGEX.test(expectedDate) && parsed.expenses.length > 0) {
+    const found = parsed.expenses.some((e) => String(e.date || '') === expectedDate);
+    if (!found) {
+      const dates = parsed.expenses.map((e) => e.date).join(', ');
+      reasons.push(`Expected date ${expectedDate}, got: ${dates}`);
+      score -= 0.2;
+    }
+  }
+
+  // Optional: if test provides expectedDescription, verify at least one expense description contains it (case-insensitive)
+  const expectedDesc = vars.expectedDescription;
+  if (typeof expectedDesc === 'string' && expectedDesc && parsed.expenses.length > 0) {
+    const exp = expectedDesc.toLowerCase();
+    const found = parsed.expenses.some(
+      (e) => String(e.description || '').toLowerCase().includes(exp)
+    );
+    if (!found) {
+      const descs = parsed.expenses.map((e) => e.description).join('; ');
+      reasons.push(`Expected description containing "${expectedDesc}", got: ${descs}`);
+      score -= 0.2;
+    }
+  }
+
   const pass = score >= 1;
   return {
     pass,

@@ -9,6 +9,9 @@
         {"id":"ex-1","from":"orders@coffee-shop.com","subject":"Your receipt #4421","date":"Wed, 22 Jan 2025 10:30:00 -0500","body":"Thank you for your order. Total: $12.75. Date: January 22, 2025. Card ending 4242."}
       ]
     expectedMinExpenses: 1
+    expectedAmount: 12.75
+    expectedMerchant: "Coffee Shop"
+    expectedDate: "2025-01-22"
   assert:
     - type: javascript
       value: file://assertions/extract-assertions.js
@@ -25,6 +28,9 @@
         {"id":"ex-2","from":"noreply@instacart.com","subject":"Your No Frills order confirmation","date":"Fri, 30 Jan 2026 14:55:58 +0000","body":"Your order is confirmed. Delivery today 1pm-4pm. Order total: $87.42. Items: milk, bread, eggs. Service fee may apply."}
       ]
     expectedMinExpenses: 1
+    expectedAmount: 87.42
+    expectedMerchant: "No Frills|Instacart"
+    expectedDate: "2026-01-30"
   assert:
     - type: javascript
       value: file://assertions/extract-assertions.js
@@ -41,6 +47,9 @@
         {"id":"ex-3","from":"receipts@lyft.com","subject":"Your Lyft receipt","date":"Mon, 03 Feb 2025 08:15:00 GMT","body":"Trip from A to B. Total charged: $22.30. Thank you for riding."}
       ]
     expectedMinExpenses: 1
+    expectedAmount: 22.30
+    expectedMerchant: "Lyft"
+    expectedDate: "2025-02-03"
   assert:
     - type: javascript
       value: file://assertions/extract-assertions.js
@@ -75,6 +84,7 @@
         {"id":"19c0276a5d30f977","from":"bookings.vaughan@reptilia.org","subject":"Payment Confirmation","date":"28 Jan 2026 02:37:31 +0000","body":"Order #: 9352 Thank you for your payment! A copy of your invoice is attached to this email for your records."}
       ]
     expectedMinExpenses: 1
+    expectedAmount: 0
   assert:
     - type: javascript
       value: file://assertions/extract-assertions.js
@@ -92,6 +102,9 @@
         {"id":"19bd20ce7f5635d5","from":"Amazon.ca <auto-confirm@amazon.ca>","subject":"Ordered: Hefty Basics Freezer...","date":"Sun, 18 Jan 2026 17:00:18 +0000","body":"Thanks for your order, jane! Ordered Shipped Out for delivery Delivered Arriving tomorrow jane – Maple, Ontario Order # 701-7828946-9057041 View or edit order Hefty Basics Freezer Bags/Food Ba... Quantity: 1 $ 11 99 Total $13.55 ©2026 Amazon.com, Inc."}
       ]
     expectedMinExpenses: 1
+    expectedAmount: 13.55
+    expectedMerchant: "Amazon"
+    expectedDate: "2026-01-18"
   assert:
     - type: javascript
       value: file://assertions/extract-assertions.js
@@ -139,6 +152,9 @@
         {"id":"19b419072a0756df","from":"Making Dream <info@makingdream.ca>","subject":"Your Making Dream order is now complete","date":"Sun, 21 Dec 2025 10:39:02 -0500","body":"Your Making Dream order is now complete. Order summary Order #41607 (17 December 2025). 50 Premium Mixed Color Roses Bouquet. Subtotal: CAD 269.98. HST (13%): CAD 35.10. Total: CAD 305.08. Payment method: Debit & Credit Cards. Pickup Date December 21, 2025."}
       ]
     expectedMinExpenses: 1
+    expectedAmount: 305.08
+    expectedMerchant: "Making Dream"
+    expectedDate: "2025-12-21"
   assert:
     - type: javascript
       value: file://assertions/extract-assertions.js
@@ -155,6 +171,9 @@
         {"id":"19b097b2022cc3c0","from":"Old Navy Canada <orders@email.oldnavy.ca>","subject":"Order Confirmation #1P4V21D","date":"Wed, 10 Dec 2025 12:17:02 -0600","body":"Order Confirmation #1P4V21D. Your order #1P4V21D has been received. Total CA$56.51. Visa – 9933 (CA$56.51). Subtotal (3 items) CA$44.97. Rewards -CA$2.00. Shipping CA$9.00. Est Tax CA$4.54. Total CA$56.51."}
       ]
     expectedMinExpenses: 1
+    expectedAmount: 56.51
+    expectedMerchant: "Old Navy"
+    expectedDate: "2025-12-10"
   assert:
     - type: javascript
       value: file://assertions/extract-assertions.js
